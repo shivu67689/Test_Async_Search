@@ -2,38 +2,69 @@
 //  DataModel.swift
 //  test_test
 //
-//  Created by Shivakumarswami Hiremath on 08/12/21.
+//  Created by Shivakumarswami Hiremath on 13/12/21.
 //
 
 import Foundation
 
 
-// MARK: - Welcome
 struct DataModel: Codable {
-    let status: String
-    let totalResults: Int
-    let articles: [Article]
-}
-
-// MARK: - Article
-struct Article: Codable {
-    let source: Source
-    let author: String?
-    let title, articleDescription: String
-    let url: String
-    let urlToImage: String
-    let publishedAt: Date
-    let content: String
+    let status, copyright: String
+    let hasMore: Bool
+    let numResults: Int
+    let results: [Result]
 
     enum CodingKeys: String, CodingKey {
-        case source, author, title
-        case articleDescription = "description"
-        case url, urlToImage, publishedAt, content
+        case status, copyright
+        case hasMore = "has_more"
+        case numResults = "num_results"
+        case results
     }
 }
 
-// MARK: - Source
-struct Source: Codable {
-    let id: String?
-    let name: String
+// MARK: - Result
+struct Result: Codable {
+    let displayTitle, mpaaRating: String
+    let criticsPick: Int
+    let byline, headline, summaryShort, publicationDate: String
+    let openingDate: String?
+    let dateUpdated: String
+    let link: Link
+    let multimedia: Multimedia?
+
+    enum CodingKeys: String, CodingKey {
+        case displayTitle = "display_title"
+        case mpaaRating = "mpaa_rating"
+        case criticsPick = "critics_pick"
+        case byline, headline
+        case summaryShort = "summary_short"
+        case publicationDate = "publication_date"
+        case openingDate = "opening_date"
+        case dateUpdated = "date_updated"
+        case link, multimedia
+    }
 }
+
+// MARK: - Link
+struct Link: Codable {
+    let type: TypeEnum
+    let url: String
+    let suggestedLinkText: String
+
+    enum CodingKeys: String, CodingKey {
+        case type, url
+        case suggestedLinkText = "suggested_link_text"
+    }
+}
+
+enum TypeEnum: String, Codable {
+    case article = "article"
+}
+
+// MARK: - Multimedia
+struct Multimedia: Codable {
+    let type: String
+    let src: String
+    let height, width: Int
+}
+

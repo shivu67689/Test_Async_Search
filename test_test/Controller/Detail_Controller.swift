@@ -2,43 +2,59 @@
 //  Detail_Controller.swift
 //  test_test
 //
-//  Created by Shivakumarswami Hiremath on 08/12/21.
+//  Created by Shivakumarswami Hiremath on 13/12/21.
 //
 
 import UIKit
+import Kingfisher
 
 class Detail_Controller: UIViewController {
 
     
-    var datasource:[String.SubSequence] = []
+    var local_result:Result?
     
     
+    @IBOutlet weak var ScrollView:UIScrollView!
+    @IBOutlet weak var lbl_info:UILabel!
     
-    @IBOutlet weak var tableview:UITableView!
+    @IBOutlet weak var Imageview:UIImageView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        
+        guard let result = self.local_result else {return}
+        lbl_info.text = "Headline : \(result.headline) \n Display title : \(result.displayTitle) \n Summary short :\(result.summaryShort) "
+        guard let url = URL(string: result.multimedia?.src ?? "") else {
+            Imageview.image = UIImage(named: "no_content")
+            
+            
+            return
+        }
+        Imageview.kf.setImage(with:url)
         
     
 
         // Do any additional setup after loading the view.
     }
     
+   
 
-    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        var contentRect = CGRect.zero
+        
+        
+        for view: UIView in ScrollView.subviews {
+        contentRect = contentRect.union(view.frame)
+        }
+        
+        
+        ScrollView.contentSize = contentRect.size
+
+    }
 
 }
 
 
-extension Detail_Controller:UITableViewDataSource{
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return datasource.count
-    }
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        
-        cell.textLabel?.text = String(datasource[indexPath.row])
-        
-        return cell
-    }
-}
+
